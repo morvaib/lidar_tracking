@@ -12,7 +12,7 @@ Lidar data based tracking system for humans and dogs
 
 
 ## Part created by Lehel Horváth
-# Data pipeline
+## Data pipeline
 - videos/images -> object detection -> outputs
 - outputs -> preprocess -> filtered
 - filtered -> tracking/interpolation(/merge if needed) -> tracked
@@ -20,7 +20,7 @@ Lidar data based tracking system for humans and dogs
 - projected -> clustering/multi tracking -> projected
 - rosbag -> extract and transform -> laser_coords
 
-# Scripts
+## Scripts
 - mask_rcnn_test.py/detectron_test.py: test the objection detection outputs
 - rcnn.py/detectron.py: detect dogs and persons on input videos
 - preprocess.py: filter the detections
@@ -41,7 +41,7 @@ Lidar data based tracking system for humans and dogs
 - test_aggregate.py: plot histogram data on multiple test results (avg_dist)
 
 ## Part created by Balázs Morvai
-# Datastream
+## Datastream
 - videos -> detecting and tracking -> datastream/yolo7_deepsort/tracked/humans(dogs)
 - datastream/yolo7_deepsort/tracked/humans(dogs) -> preprocess -> datastream/yolo7_deepsort/filtered/humans(dogs)
 - datastream/yolo7_deepsort/tracked/filtered/humans(dogs) -> object_merger -> datastream/yolo7_deepsort/merged
@@ -49,7 +49,7 @@ Lidar data based tracking system for humans and dogs
 - datastream/yolo7_deepsort/projected/points -> clustering -> datastream/yolo7_deepsort/projected/cluster_centers
 - datastream/yolo7_deepsort/projected/cluster_centers -> laser data labeling -> lidar_nn/training_data
 
-# Scripts
+## Scripts
 - yolov7-deepsort-tracking/bridge_wrapper.py: detect and track videos
 - preprocess.py: filtering by size, position and moving the ground point of objects
 - object_merger.py: merge detections to one file
