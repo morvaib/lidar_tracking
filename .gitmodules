@@ -1,6 +1,0 @@
-[submodule "src/deep_sort_pytorch"]
-	path = src/deep_sort_pytorch
-	url = https://github.com/ZQPei/deep_sort_pytorch
-[submodule "src/yolov7-deepsort-tracking"]
-	path = src/yolov7-deepsort-tracking
-	url = https://github.com/deshwalmahesh/yolov7-deepsort-tracking/
