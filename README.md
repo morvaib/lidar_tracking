@@ -1,10 +1,10 @@
 # README #
 
-LIDAR based object tracking system
+LiDAR based object tracking system
 
 ## Repositories included
-- [Detectron2 DeepSORT](https://github.com/sayef/detectron2-deepsort-pytorch)
-- [Yolov7 DeepSORT](https://github.com/deshwalmahesh/yolov7-deepsort-tracking/)
+- [Detectron2 DeepSORT](https://github.com/sayef/detectron2-deepsort-pytorch): detectron2_deepsort_pytorch
+- [Yolov7 DeepSORT](https://github.com/deshwalmahesh/yolov7-deepsort-tracking/): yolov7-deepsort-tracking
 
 ## Environments
 - environment for rcnn:
