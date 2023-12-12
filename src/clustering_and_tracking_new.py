@@ -21,14 +21,8 @@ MAX_DOGS = 2
 MAX_PERSONS = 2
 CAMS = 5
 CAM_EXCLUDE = 0
-MAX_CLUSTER_RANGE = 0.5 # restriction
-MAX_LAB_PREV_DIST = 0.2 # kmeans init track dist
-MAX_LAB_TRACK_DIST = 0.35 # center tracking track dist
-MAX_LAB_SPEED = 0.3
-MAX_LAB_ERROR_DIST = 1 # speed + error
 
-PREV_LAB_FRAME_LENGHT = 10
-
+#dictionaries for the objects
 def make_id_dicts():
     dog_ids = []
     person_ids = []
@@ -157,12 +151,6 @@ def clustering(data, laser_data):
                 for point_idx in range(len(clusters[frame_num][object_name][object_id]["points"])):
                     if calc_mahalanobis(clusters[frame_num][object_name][object_id]["points"], point_idx) > 0.85:
                         points_to_remove.append(clusters[frame_num][object_name][object_id]["points"][point_idx])
-                # if 225 < int(frame_num) and int(frame_num) < 300:
-                #     print(f"frame{frame_num}")
-                #     print(object_name, object_id)
-                #     print(clusters[frame_num][object_name][object_id]["points"])
-                #     print(clusters[frame_num][object_name][object_id]["center"])
-                #     print(points_to_remove)
 
                 for to_remove in points_to_remove:
                     clusters[frame_num][object_name][object_id]["points"].remove(to_remove)
@@ -223,11 +211,6 @@ def clustering(data, laser_data):
                 #cent3  cent3_pred-act1  cent3_pred-act1  cent3_pred-act1
                 cost_matrix = np.empty(shape=(len(act_centers), len(act_centers)))
 
-                if 1 < int(frame_num) and int(frame_num) < 306:
-                    print(object_name)
-                    print(f"act_centers: {act_centers}")
-                    print(f"act: {act}")
-                    print(f"predictions: {predictions}")
                 row_num = 0
                 for object_id in predictions[object_name].keys():
                     row = []
@@ -269,6 +252,7 @@ def clustering(data, laser_data):
             for ob_id in clusters[frame_num][object_name].keys():
                 cluster_centers[frame_num][object_name][ob_id] = copy.deepcopy(clusters[frame_num][object_name][ob_id]["center"])
 
+        #plot the results
         plot = True
         if plot:
             scale = 1000

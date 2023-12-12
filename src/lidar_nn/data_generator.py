@@ -36,11 +36,13 @@ class DataGenerator(tf.keras.utils.Sequence):
             self.indexes = np.arange(5, len(self.training_data))
 
     def genearate_sequences(self):
+        #generate sequences for lstm
         start_num = 5
         stop_num = math.floor((len(self.training_data) - start_num) / self.sequence_size) * self.sequence_size
         return np.arange(start=start_num, stop=stop_num, step=1, dtype=np.float32).reshape(-1, self.sequence_size)
 
     def lidar_to_image(self, lidar_data_list, frame_num):
+        #convert lidar points to image
         img = np.full((256, 256), 0, dtype=np.float32)
 
         for point in lidar_data_list[frame_num]:
@@ -51,6 +53,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         return img
 
     def create_masks(self, img, training_data_frame):
+        #create output masks
         channels = []
         walls = np.copy(img)
 
@@ -71,12 +74,14 @@ class DataGenerator(tf.keras.utils.Sequence):
         return img,  np.stack(channels, axis=2)/255.0
 
     def norm_img(self, x):
+        #normalize
         x /= 255.
         x -= 0.5
         x *= 2.
         return x
 
     def __data_generation(self, indexes):
+        #generate training data in batches
         laser_data_list = list(self.laser_data.values())
         rate = len(self.laser_data) / len(self.training_data)
 

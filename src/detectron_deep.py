@@ -31,6 +31,7 @@ CAM = 0
 
 MODEL = "COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"
 
+#unpack the model output data
 def unpack_detectron_data(data, idx, class_mapper):
     classes = data.pred_classes
     boxes = data.pred_boxes
@@ -61,6 +62,7 @@ def unpack_detectron_data(data, idx, class_mapper):
 
     return commask, combox, ground_mask, object_name, score, h, w
 
+#detect on video
 def detect_video(predictor, video_path, class_mapper):
     info = {}
     info2 = {}

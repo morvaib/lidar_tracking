@@ -7,21 +7,24 @@ import time
 from data_generator import DataGenerator
 
 if __name__ == '__main__':
+    #load model
     model = tf.keras.models.load_model(os.path.join('models', 'unet.model'), custom_objects={'dice': dice})
 
-    img = np.loadtxt("test2.csv", delimiter=",")
+    #load image as csv
+    img = np.loadtxt("test1.csv", delimiter=",")
     img = np.expand_dims(img, axis=2)
     img = np.expand_dims(img, axis=0)
-    # start = time.time()
-    # print("start")
-    # pred = model.predict(img, batch_size=1)
-    # duration = time.time() - start
-    # print(duration)
-    # for i in range(4):
-    #     np.savetxt(os.path.join("pred" + str(i) + ".csv"), pred[0,:,:,i], delimiter = ",")
-    #     plt.imshow(pred[0,:,:,i], cmap='gray')
-    #     plt.waitforbuttonpress()
+    start = time.time()
+    print("start")
+    pred = model.predict(img, batch_size=1)
+    duration = time.time() - start
+    print(duration)
+    for i in range(4):
+        np.savetxt(os.path.join("pred" + str(i) + ".csv"), pred[0,:,:,i], delimiter = ",")
+        plt.imshow(pred[0,:,:,i], cmap='gray')
+        plt.waitforbuttonpress()
 
+    #load predictions
     pred0 = np.loadtxt("pred0.csv", delimiter=",")
     pred1 = np.loadtxt("pred1.csv", delimiter=",")
     pred2 = np.loadtxt("pred2.csv", delimiter=",")
@@ -29,10 +32,11 @@ if __name__ == '__main__':
 
     preds = np.stack((pred0, pred1, pred2, pred3), axis=-1)
     preds_cleared = np.empty(shape=preds.shape)
-    print(preds.shape)
+
     pred = np.full((256, 256), 255, dtype=np.float32)
     objects = ["humans", "dogs", "wall"]
-    #preds = np.squeeze(preds, axis=0)
+
+    #show result
     for obj_num, obj_name in enumerate(objects):
         for i in  range(256):
             for j in range(256):

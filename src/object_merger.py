@@ -11,6 +11,7 @@ TEST_NAME = "05_23_sync_det"
 
 CAM_EXCLUDE = [6]
 
+#read in files
 def read_files(filenames, path):
     com_data = []
     for filename in filenames:
@@ -22,6 +23,7 @@ def read_files(filenames, path):
 
     return com_data
 
+#merge the objects from different cameras
 def merge_cameras(tracked_data):
     multi_cam_data = {}
     for cam_data in tracked_data:
@@ -39,6 +41,7 @@ def merge_cameras(tracked_data):
 
     return multi_cam_data
 
+#merge the different objects
 def merge_objects(dogs, humans):
     merged_objetcs = dogs
     for frame_id, frame_data in humans.items():

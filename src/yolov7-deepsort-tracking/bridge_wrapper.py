@@ -170,10 +170,11 @@ class YOLOv7_DeepSORT:
                 if verbose == 2:
                     print("Tracker ID: {}, Class: {},  BBox Coords (xmin, ymin, xmax, ymax): {}".format(str(track.track_id), class_name, (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))))
 
+                # generate the object info
                 commask = np.array([(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2]).astype(int).tolist()
                 combox = commask
                 object_name = class_name
-                score = 0 #tracked score makes no sense
+                score = 0
                 h = int(bbox[3] - bbox[1])
                 w = int(bbox[2] - bbox[0])
                 ground_point = np.array([combox[0], combox[1] + h/2]).astype(int).tolist()

@@ -15,11 +15,12 @@ BORDER_THRESHOLD = 10
 
 INTERSECTION_RATIO = 0.75 # max area interection ratio
 
-# Size restrictions
+# size restrictions
 SIZES = {'person':{'max_height': 340, 'min_height': 100, 'max_width': 200, 'min_width': 50, 'max_area': 50000, 'min_area': 10000}, 'dog':{'max_height': 200, 'min_height': 40, 'max_width': 200, 'min_width': 40, 'max_area': 50000, 'min_area': 3200}}
 
 MAX_DIST = 15
 
+#check object near the border
 def check_border_points(combox, height, width):
     is_border = False
     if combox[0] - width/2 < BORDER_THRESHOLD or combox[0] + width/2 > MAX_X - BORDER_THRESHOLD \
@@ -28,7 +29,7 @@ def check_border_points(combox, height, width):
 
     return is_border
 
-
+#filter by size
 def filter_size(com_data):
     filtered_data = {}
     for frame_id, frame_objects in com_data.items():
@@ -44,7 +45,7 @@ def filter_size(com_data):
 
     return filtered_data
 
-
+#filter by intersection
 def filter_intersect(com_data):
     filtered_data = {}
     for frame_id, frame_objects in com_data.items():
@@ -110,6 +111,7 @@ def filter_all(com_data):
 
     return filtered_data
 
+#move the ground point
 def move_ground_point(com_data):
     data = {}
     for frame_id, frame_objects in com_data.items():
@@ -126,14 +128,14 @@ def move_ground_point(com_data):
     return data
 
 if __name__ == "__main__":
-    #with open(os.path.join(OUTPUT_DIR,  TEST_NAME + ".json"), "r") as json_file:
-    #    com_data = json.load(json_file)
+    with open(os.path.join(OUTPUT_DIR,  TEST_NAME + ".json"), "r") as json_file:
+       com_data = json.load(json_file)
 
-    #filtered_data = filter_all(com_data)
-    #filtered_data = move_ground_point(com_data)
+    filtered_data = filter_all(com_data)
+    filtered_data = move_ground_point(com_data)
 
-    #with open(os.path.join(FILTERED_DIR, TEST_NAME + ".json"), "w") as json_file:
-    #    json.dump(filtered_data, json_file, ensure_ascii=False, indent=4)
+    with open(os.path.join(FILTERED_DIR, TEST_NAME + ".json"), "w") as json_file:
+       json.dump(filtered_data, json_file, ensure_ascii=False, indent=4)
 
     _, _, filenames = next(os.walk(os.path.join(OUTPUT_DIR, TEST_NAME)))
 

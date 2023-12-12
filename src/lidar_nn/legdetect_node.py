@@ -16,6 +16,7 @@ from models import dice
 
 class LegDetect:
     def __init__(self):
+        #subscribe to topics and init variables
         rospy.Subscriber("/rb1_base/front_laser/scan", LaserScan, self.callback_laser)
         rospy.Subscriber("/rb1_base/map", OccupancyGrid, self.callback_map)
         rospy.Subscriber("/robot_pose", Pose, self.callback_pose)
@@ -29,17 +30,21 @@ class LegDetect:
         self.scale = 1
         self.x_offset = 0
         self.y_offset = 0
+        #get model
         self.model = tensorflow.keras.models.load_model(os.path.join('models', 'unet.model'), custom_objects={'dice': dice})
 
+    #callback for position
     def callback_pose(self, msg):
         self.pose = [msg.position.x, msg.position.y, msg.position.z]
 
+    #callback for lidar
     def callback_laser(self, msg):
         angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges), dtype = np.float32)
         ranges = np.array(msg.ranges, dtype = np.float32)
         self.laser_x = ranges * np.cos(angles)
         self.laser_y = ranges * np.sin(angles)
 
+    #callback for map
     def callback_map(self, msg):
         map = np.matrix(np.reshape(msg.data, (msg.info.height, msg.info.width)))
         m = np.empty([msg.info.height, msg.info.width])
@@ -48,6 +53,7 @@ class LegDetect:
             for j in range(msg.info.width):
                 self.map_plot[-i,j] = msg.data[i*msg.info.width + j]
 
+    #convert laser data to map coord. system
     def laser_to_map(self):
         rate = rospy.Rate(5.0)
         while not rospy.is_shutdown():
@@ -69,18 +75,14 @@ class LegDetect:
                 self.lasertf_plot_y[i] = lasertf[i][1]
 
             pose = r.apply(np.array([0, 0, 0])) + np.array(trans)
-            #plt.cla()
-            #plt.plot(self.lasertf_plot_x, self.lasertf_plot_y, "ro", markersize=2)
-            # img = self.lidar_to_image()
-            # img = self.preprocess_img(img)
-            # np.savetxt("data.csv", img, delimiter = ",")
-            # print("saved")
-            #masks = self.detect_legs(img)
-            #print(masks.shape)
-            # plt.imshow(img, cmap='gray')
-            #plt.pause(0.001)
+
+            img = self.lidar_to_image()
+            masks = self.detect_legs(img)
+            self.masks_to_lidar(masks)
+
             rate.sleep()
 
+    #convert lidar data to image
     def lidar_to_image(self):
         img = np.full((256, 256), 255, dtype=np.float32)
 
@@ -101,10 +103,11 @@ class LegDetect:
 
         return img
 
+    #convert predictions to lidar points
     def masks_to_lidar(self, preds):
         leg_msg = Legs()
         objects = ["humans", "dogs", "wall"]
-        #preds = np.squeeze(preds, axis=0)
+        preds = np.squeeze(preds, axis=0)
         for obj_num, obj_name in enumerate(objects):
             for i in  range(256):
                 for j in range(256):
@@ -121,21 +124,24 @@ class LegDetect:
 
         self.pub.publish(leg_msg)
 
+    #normalize
     def preprocess_img(self, x):
         x /= 255.
         x -= 0.5
         x *= 2.
         return x
 
+    #run the neural network
     def detect_legs(self, img):
         img = self.preprocess_img(img)
         img = np.expand_dims(img, axis=2)
         img = np.expand_dims(img, axis=0)
         pred = self.model.predict(img)
 
-        return pred        
+        return pred
 
 if __name__=='__main__':
+    #init node
     rospy.init_node('legdetect_nn')
     leg = LegDetect()
 

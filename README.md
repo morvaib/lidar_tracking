@@ -25,7 +25,7 @@ LIDAR based object tracking system
 - datastream/yolo7_deepsort/projected/cluster_centers -> laser data labeling -> lidar_nn/training_data
 
 ## Scripts created by Balázs Morvai
-- yolov7-deepsort-tracking/bridge_wrapper.py: yolov7 object trackin
+- yolov7-deepsort-tracking/bridge_wrapper.py: yolov7 object tracking
 - detectron_deep.py: detectron2 object tracking
 - preprocess.py: filtering by size, position and moving the ground point of objects
 - object_merger.py: merge detections to one file
